@@ -71,3 +71,10 @@ chmod 600 ~/.ssh/bandit17_key
 ssh -i ~/.ssh/bandit17_key bandit17@bandit.labs.overthewire.org -p 2220
 
 This uses public-key authentication (no password needed).
+
+
+
+# Bandit 17
+ para conseguir pass comparar 2 archivos de texto identicos excepto una linea cambiada
+
+se usa comando diff entre password.new y passwords.old
