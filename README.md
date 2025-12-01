@@ -116,3 +116,23 @@ Entonces usamos el binario setuid para ejecutar cat como bandit20:
 
 ./bandit20-do cat /etc/bandit_pass/bandit20
 
+# Bandit 20
+There is a setuid binary in the homedirectory that does the following: it makes a connection to
+ localhost on the port you specify as a commandline argument.
+ It then reads a line of text from the connection and compares it to the password in the previous level (bandit20). If the password is correct, it will transmit the password for the next level (bandit21).
+
+NOTE: Try connecting to your own network daemon to see if it works as you think
+
+
+nc -lvkp 50000 <<< "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" & sleep 0.5; ./suconnect 50000
+
+0.000s → nc empieza a escuchar en el puerto 50000
+      → ya tiene escrita la contraseña de bandit20 lista para enviar
+0.500s → sleep termina
+      → se ejecuta ./suconnect 50000
+      → suconnect se conecta al puerto
+      → lee la línea que le envía nc → comprueba que es correcta
+      → escribe la contraseña de bandit21 en la conexión
+      → nc la recibe y la imprime en pantalla
+
+Tú abres el canal → dejas el mensaje listo → das un poquito de tiempo → llamas al robot → el robot te da el premio.
