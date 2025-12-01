@@ -78,3 +78,17 @@ This uses public-key authentication (no password needed).
  para conseguir pass comparar 2 archivos de texto identicos excepto una linea cambiada
 
 se usa comando diff entre password.new y passwords.old
+
+# Bandit 18
+The password for the next level is stored in a file readme in the homedirectory.
+ Unfortunately, someone has modified .bashrc to log you out when you log in with SSH.
+
+ssh bandit18@bandit.labs.overthewire.org -p 2220 cat readme
+
+Al poner cat readme al final del comando ssh, le estamos diciendo:
+“Conéctate con SSH, autentícate, pero NO abras un shell interactivo. En su lugar, ejecuta directamente el comando cat readme y envíame la salida por la conexión SSH.”
+Esto se llama ejecución remota de un comando no interactivo.
+Consecuencias:
+
+SSH no considera que es un “login interactivo”.
+Por lo tanto, NO se cargan .bashrc, .bash_profile, ni ninguno de los archivos de inicio del shell.
