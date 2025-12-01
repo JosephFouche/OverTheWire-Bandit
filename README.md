@@ -92,3 +92,27 @@ Consecuencias:
 
 SSH no considera que es un “login interactivo”.
 Por lo tanto, NO se cargan .bashrc, .bash_profile, ni ninguno de los archivos de inicio del shell.
+
+# Bandit 19
+
+To gain access to the next level, you should use the setuid binary in the homedirectory. Execute it without arguments to find out how to use it. The password for this level can be found in the usual place (/etc/bandit_pass), after you have used the setuid binary.
+
+rwsr-x---  1 root bandit19 7296 Apr 23 2018 bandit20-do
+   ↑
+   esta "s" es el bit setuid
+
+Bit setuid = activado → el programa corre como root, no como tú.
+
+¿Qué hace realmente el programa bandit20-do?
+No es un programa mágico que te da root completo. Es un programa muy pequeño y controlado que hace lo siguiente:
+
+Mira quién lo está ejecutando (tú, bandit19).
+Dice: “Ok, como soy setuid root, tengo poder de root… pero solo voy a usar ese poder para cambiar temporalmente al usuario bandit20 y ejecutar el comando que me pidas”.
+
+En otras palabras: te permite ejecutar un solo comando como si fueras bandit20.
+
+
+Entonces usamos el binario setuid para ejecutar cat como bandit20:
+
+./bandit20-do cat /etc/bandit_pass/bandit20
+
