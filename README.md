@@ -170,3 +170,44 @@ chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
 cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
 bandit21@bandit:/etc/cron.d$ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
 tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q
+
+# Bandit 22
+
+A program is running automatically at regular intervals from cron, the time-based job scheduler.
+ Look in /etc/cron.d/ for the configuration and see what command is being executed.
+
+NOTE: Looking at shell scripts written by other people is a very useful skill.
+ The script for this level is intentionally made easy to read. If you are having problems understanding what it does,
+ try executing it to see the debug information it prints.
+
+bandit22@bandit:~$ cd /etc/cron.d
+bandit22@bandit:/etc/cron.d$ ls
+behemoth4_cleanup  clean_tmp  cronjob_bandit22  cronjob_bandit23  cronjob_bandit24  e2scrub_all  leviathan5_cleanup  manpage3_resetpw_job  otw-tmp-dir  sysstat
+bandit22@bandit:/etc/cron.d$ cat /etc/cron.d/cronjob_bandit23
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+bandit22@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit23.sh
+ #!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+
+Cron copia la contraseña de bandit23 dentro de un archivo en /tmp, cuyo nombre es un hash md5 basado en el texto:
+
+I am user bandit23
+
+
+Entonces vos solo tenés que generar ese md5 igual que el script.
+
+Hacelo directamente desde bandit22:
+
+echo -n "I am user bandit23" | md5sum | cut -d ' ' -f1
+
+bandit22@bandit:/$ echo -n "I am user bandit23" | md5sum | cut -d ' ' -f1
+7dfc5d0348e965fba8b56a01c1508c98
+
+
