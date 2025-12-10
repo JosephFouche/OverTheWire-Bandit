@@ -136,3 +136,37 @@ nc -lvkp 50000 <<< "0qXahG8ZjOVMN9Ghs7iOWsCfZyXOUbYO" & sleep 0.5; ./suconnect 5
       → nc la recibe y la imprime en pantalla
 
 Tú abres el canal → dejas el mensaje listo → das un poquito de tiempo → llamas al robot → el robot te da el premio.
+
+# Bandit 21
+Level 21 → Level 22 Level Goal A program is running automatically at regular intervals from cron,
+ the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
+
+Primero, mira los archivos cron del sistema:
+
+ls -l /etc/cron.d/
+
+
+Vas a ver varios archivos, incluyendo uno llamado algo como:
+
+cronjob_bandit22
+
+
+Luego, simplemente ábrelo:
+
+cat /etc/cron.d/cronjob_bandit22
+
+
+Ese archivo te mostrará qué script se ejecuta, y normalmente apunta a algo como:
+
+/usr/bin/cronjob_bandit22.sh
+
+
+Entonces inspeccionás el script:
+
+cat /usr/bin/cronjob_bandit22.sh
+bandit21@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit22.sh
+ #!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+bandit21@bandit:/etc/cron.d$ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+tRae0UfB9v0UzbCdn9cY0gQnds9GF58Q
