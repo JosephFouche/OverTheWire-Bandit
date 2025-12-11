@@ -163,7 +163,7 @@ Ese archivo te mostrará qué script se ejecuta, y normalmente apunta a algo com
 
 Entonces inspeccionás el script:
 
-cat /usr/bin/cronjob_bandit22.sh
+tRae0UfB9v0UzbCdn9cY0gQnds9GF58Qcat /usr/bin/cronjob_bandit22.sh
 bandit21@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit22.sh
  #!/bin/bash
 chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
@@ -210,4 +210,39 @@ echo -n "I am user bandit23" | md5sum | cut -d ' ' -f1
 bandit22@bandit:/$ echo -n "I am user bandit23" | md5sum | cut -d ' ' -f1
 7dfc5d0348e965fba8b56a01c1508c98
 
+
+# Bandit 23
+
+Bandit Level 22 → Level 23
+Level Goal
+A program is running automatically at regular intervals from cron, the time-based job scheduler. Look in /etc/cron.d/ for the configuration and see what command is being executed.
+NOTE: Looking at shell scripts written by other people is a very useful skill. The script for this level is intentionally made easy to read. If you are having problems understanding what it does, try executing it to see the debug information it prints.
+
+Look in /etc/cron.d/ for the relevant job file:
+
+cat /etc/cron.d/cronjob_bandit23
+
+Examine the script that's being executed:
+cat /usr/bin/cronjob_bandit23.sh
+
+ #!/bin/bash
+
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+
+The script runs as bandit23, so myname becomes bandit23.
+It computes the MD5 hash of the string "I am user bandit23", takes the first field (the hash itself), and uses that as a filename in /tmp/.
+Then it copies the bandit23 password to that file.
+
+Compute the filename yourself (as bandit22):
+
+echo "I am user bandit23" | md5sum | cut -d ' ' -f 1
+
+The cronjob runs every minute and creates/overwrites the file /tmp/8ca319486bfbbc3663ea0fbe81326349 with the bandit23 password.
+Read the password:
+
+cat /tmp/8ca319486bfbbc3663ea0fbe81326349
 
