@@ -246,3 +246,104 @@ Read the password:
 
 cat /tmp/8ca319486bfbbc3663ea0fbe81326349
 
+# bandit 24
+
+
+Bandit Level 23 → Level 24 Level Goal A program is running automatically at regular intervals from cron, the time-based job scheduler.
+ Look in /etc/cron.d/ for the configuration and see what command is being executed. NOTE: This level requires you to create your own first shell-script.
+ This is a very big step and you should be proud of yourself when you beat this level!
+ NOTE 2: Keep in mind that your shell script is removed once executed, so you may want to keep a copy around…
+
+
+
+bandit23@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit24.sh #!/bin/bash myname=$(whoami)
+ cd /var/spool/$myname/foo echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
+ for i in * .*; do if [ "$i" != "." -a "$i" != ".." ];
+ then echo "Handling $i" owner="$(stat --format "%U" ./$i)" if [ "${owner}" = "bandit23" ];
+ then timeout -s 9 60 ./$i fi rm -f ./$i fi done
+
+explicacion
+
+myname=$(whoami) → the script runs as bandit24
+Working directory:
+/var/spool/bandit24/foo
+
+It executes every file in that directory
+
+
+echo "Executing and deleting all scripts in /var/spool/$myname/foo:"
+Purely informational. This prints a message so admins (or you) can see what the cron job is doing.
+
+
+for i in * .*; do
+This is the engine of the whole script.
+It loops over all files in the directory:
+
+* → normal files
+
+.* → hidden files
+This is why . and .. must be filtered out later.
+
+
+
+if [ "$i" != "." -a "$i" != ".." ]; then
+Safety check.
+. means “current directory”
+.. means “parent directory”
+Trying to execute or delete those would be catastrophic, so they’re explicitly excluded.
+
+
+
+echo "Handling $i"
+Just logging. It prints which file is being processed.
+
+owner="$(stat --format "%U" ./$i)"
+This is a crucial line.
+
+stat inspects file metadata
+
+%U means “username of the file owner”
+The result is stored in the variable owner.
+Example: bandit23, bandit24, etc.
+
+if [ "${owner}" = "bandit23" ]; then
+Another gate.
+Only files owned by bandit23 are allowed to run.
+This was meant as a security control. It isn’t.
+
+timeout -s 9 60 ./$i
+This executes the file:
+
+timeout 60 → kills it if it runs longer than 60 seconds
+
+-s 9 → sends SIGKILL (force kill)
+
+./$i → runs the script from the current directory
+
+Important detail:
+Even though the file is owned by bandit23, it runs as bandit24, because the cron job is bandit24.
+
+That mismatch is the vulnerability.
+
+fi
+Ends the owner check.
+
+rm -f ./$i
+Deletes the file no matter what:
+
+Executed or not
+
+Success or failure
+This is why your script disappears after one run.
+
+fi
+Ends the “not . or ..” check.
+
+done
+Ends the loop. Every file gets one pass.
+
+
+
+
+
+
